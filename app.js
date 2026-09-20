@@ -392,37 +392,41 @@ async function doSearch() {
   for (let i = 1; i <= 4; i++) { setStage(i); await new Promise((r) => setTimeout(r, delays[i - 1])); }
   try {
     if (ASL_API_BASE) {
-      const response = await fetch(`${ASL_API_BASE}/api/search?q=${encodeURIComponent(q)}`, {
-        headers: { "Accept": "application/json" }
-      });
-      if (!response.ok) throw new Error(`Backend HTTP ${response.status}`);
-      const data = await response.json();
-      showStages(false);
-      document.getElementById("search-btn").disabled = false;
-      saveHistory(q);
-      if (!data.coverUrl) {
-        document.getElementById("empty-box").classList.add("show");
-        const ul = document.getElementById("empty-sources");
-        ul.innerHTML = "";
-        (data.sourcesTried || []).slice(0, 8).forEach((source) => {
-          const li = document.createElement("li");
-          li.textContent = `[${source.score || 0}] ${source.url}`;
-          ul.appendChild(li);
+      try {
+        const response = await fetch(`${ASL_API_BASE}/api/search?q=${encodeURIComponent(q)}`, {
+          headers: { "Accept": "application/json" }
         });
+        if (!response.ok) throw new Error(`Backend HTTP ${response.status}`);
+        const data = await response.json();
+        showStages(false);
+        document.getElementById("search-btn").disabled = false;
+        saveHistory(q);
+        if (!data.coverUrl) {
+          document.getElementById("empty-box").classList.add("show");
+          const ul = document.getElementById("empty-sources");
+          ul.innerHTML = "";
+          (data.sourcesTried || []).slice(0, 8).forEach((source) => {
+            const li = document.createElement("li");
+            li.textContent = `[${source.score || 0}] ${source.url}`;
+            ul.appendChild(li);
+          });
+          return;
+        }
+        const img = document.getElementById("cover-img");
+        const renderedCoverUrl = imageThroughServer(data.coverUrl);
+        img.src = renderedCoverUrl;
+        img.onclick = () => window.open(renderedCoverUrl, "_blank");
+        document.getElementById("cover-url").value = data.coverUrl;
+        document.getElementById("dl-btn").href = renderedCoverUrl;
+        const badge = document.getElementById("conf-badge");
+        badge.textContent = t(data.confidence || "low");
+        badge.className = "confidence conf-" + (data.confidence || "low");
+        renderReport(data);
+        document.getElementById("result").classList.add("show");
         return;
+      } catch (backendError) {
+        console.warn("Backend unavailable; using client-side fallback", backendError);
       }
-      const img = document.getElementById("cover-img");
-      const renderedCoverUrl = imageThroughServer(data.coverUrl);
-      img.src = renderedCoverUrl;
-      img.onclick = () => window.open(renderedCoverUrl, "_blank");
-      document.getElementById("cover-url").value = data.coverUrl;
-      document.getElementById("dl-btn").href = renderedCoverUrl;
-      const badge = document.getElementById("conf-badge");
-      badge.textContent = t(data.confidence || "low");
-      badge.className = "confidence conf-" + (data.confidence || "low");
-      renderReport(data);
-      document.getElementById("result").classList.add("show");
-      return;
     }
     const { title, studios, urls } = buildCandidates(q);
     let best = null; let bestScore = -1; const tried = [];
