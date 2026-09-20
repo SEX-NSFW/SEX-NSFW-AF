@@ -32,3 +32,7 @@ https://YOUR-BACKEND.example.com
 PORT=8765 python3 asl/server.py
 curl "http://127.0.0.1:8765/api/image?url=https%3A%2F%2Fiili.io%2FnTed3hX.jpg" -o /tmp/image.jpg
 ```
+
+## CORS بأمان
+
+الخادم لا يستخدم `Access-Control-Allow-Origin: *`. يسمح فقط بالأصل `https://sex-nsfw.github.io` وبالعناوين المحلية الخاصة بالاختبار. إذا تغيّر نطاق الواجهة، أضف الأصل الجديد إلى `ALLOWED_ORIGINS` في `asl/server.py` بدل فتحه لجميع المواقع. لا تستخدم `Access-Control-Allow-Credentials` ولا تضع مفاتيح أو بيانات دخول في الواجهة العامة.

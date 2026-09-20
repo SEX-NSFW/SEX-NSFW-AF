@@ -15,6 +15,11 @@ except ImportError:
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 TIMEOUT = 10
+ALLOWED_ORIGINS = {
+    "https://sex-nsfw.github.io",
+    "http://localhost:8765",
+    "http://127.0.0.1:8765",
+}
 
 def normalize_query(q):
     return re.sub(r"\s+", " ", unquote(q).strip())
@@ -271,21 +276,24 @@ def identify(query):
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         print(f"[{self.log_date_time_string()}] {args[0] if args else fmt}")
+    def send_cors(self):
+        origin = self.headers.get("Origin", "")
+        if origin in ALLOWED_ORIGINS:
+            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Vary", "Origin")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type")
     def send_json(self, data, status=200):
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_cors()
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
     def do_OPTIONS(self):
         self.send_response(204)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_cors()
         self.end_headers()
     def do_GET(self):
         if self.path.startswith("/api/search"):
@@ -308,6 +316,7 @@ class Handler(BaseHTTPRequestHandler):
             body, content_type = result
             self.send_response(200)
             self.send_header("Content-Type", content_type)
+            self.send_cors()
             self.send_header("Cache-Control", "public, max-age=86400")
             self.send_header("X-Content-Type-Options", "nosniff")
             self.send_header("Content-Length", str(len(body)))
