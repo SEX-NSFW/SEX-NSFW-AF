@@ -328,7 +328,7 @@ function buildCandidates(q) {
   const studios = detectStudios(q);
   const urls = [];
   const knownPerformers = {
-    "family vacation": ["rhaya_shyne"],
+    "family_vacation": ["rhaya_shyne"],
   };
   const performerSlugs = knownPerformers[u] || [];
   performerSlugs.forEach((slug) => {
