@@ -184,21 +184,6 @@
     .error-box { border-color: var(--danger); }
     .sources-list { text-align: start; margin-top: 0.75rem; font-size: 0.82rem; color: var(--muted); }
     .sources-list li { margin: 0.25rem 0; word-break: break-all; }
-    /* Age gate */
-    #age-gate {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100;
-      display: flex; align-items: center; justify-content: center; padding: 1.5rem;
-    }
-    #age-gate.hidden { display: none; }
-    .gate-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 2rem 1.75rem; max-width: 380px;
-      text-align: center;
-    }
-    .gate-card h2 { margin-bottom: 0.75rem; font-size: 1.35rem; }
-    .gate-card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
-    .gate-btns { display: flex; gap: 0.6rem; }
-    .gate-btns .btn { flex: 1; }
     .history {
       margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);
     }
@@ -220,16 +205,6 @@
   </style>
 </head>
 <body class="rtl">
-  <div id="age-gate">
-    <div class="gate-card">
-      <h2 data-i18n="ageTitle">تأكيد العمر</h2>
-      <p data-i18n="ageText">هذا الموقع مخصص للمحتوى الإباحي التجاري للبالغين فقط. يجب أن يكون عمرك 18 سنة أو أكثر للمتابعة.</p>
-      <div class="gate-btns">
-        <button class="btn btn-primary" id="age-yes" data-i18n="ageYes">أنا 18+</button>
-        <button class="btn btn-ghost" id="age-no" data-i18n="ageNo">خروج</button>
-      </div>
-    </div>
-  </div>
 
   <div class="container">
     <header>
@@ -289,6 +264,6 @@
     <footer data-i18n="footer">أصل · أغلفة ترويجية رسمية فقط · 18+</footer>
   </div>
 
-  <script src="/app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

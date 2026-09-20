@@ -634,7 +634,24 @@ async function doSearch() {
   }
 
   try {
-    const res = await fetch("/api/search?q=" + encodeURIComponent(q));
+    let res;
+    try {
+      res = await fetch("api/search?q=" + encodeURIComponent(q));
+    } catch (netErr) {
+      res = null;
+    }
+    if (!res || !res.ok) {
+      // Try absolute as fallback (local server)
+      try { res = await fetch("/api/search?q=" + encodeURIComponent(q)); } catch(e) { res = null; }
+    }
+    if (!res || !res.ok) {
+      showStages(false);
+      document.getElementById("search-btn").disabled = false;
+      document.getElementById("error-msg").textContent =
+        "الخادم غير متصل. هذا الموقع يحتاج تشغيل السيرفر (python3 server.py) على جهازك. GitHub Pages لا يدعم البحث.";
+      document.getElementById("error-box").classList.add("show");
+      return;
+    }
     const data = await res.json();
 
     showStages(false);
@@ -679,16 +696,6 @@ async function doSearch() {
   }
 }
 
-if (localStorage.getItem("asl_age") === "1") {
-  document.getElementById("age-gate").classList.add("hidden");
-}
-document.getElementById("age-yes").onclick = () => {
-  localStorage.setItem("asl_age", "1");
-  document.getElementById("age-gate").classList.add("hidden");
-};
-document.getElementById("age-no").onclick = () => {
-  window.location.href = "about:blank";
-};
 
 document.getElementById("search-btn").onclick = doSearch;
 document.getElementById("q").addEventListener("keydown", (e) => {
