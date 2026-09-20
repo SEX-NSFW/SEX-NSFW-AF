@@ -177,7 +177,8 @@ def candidate_cdn_urls(title, studios, performers=None):
         for s in studios:
             if s in ("fs","slm","dc","pvm","mih","ts"): site_codes.append(s)
         if not site_codes: site_codes = ["fs","ts"]
-    perf_slugs = [p.lower().replace(" ","_") for p in (performers or [])[:3]]
+    known_performers = {"family vacation": ["rhaya_shyne"]}
+    perf_slugs = known_performers.get(title.lower(), []) + [p.lower().replace(" ", "_") for p in (performers or [])[:3]]
     for code in site_codes:
         for ps in (perf_slugs or [u]):
             urls.append(f"https://images.psmcdn.net/teamskeet/{code}/{ps}/shared/hi.jpg")

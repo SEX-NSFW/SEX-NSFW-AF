@@ -327,6 +327,16 @@ function buildCandidates(q) {
   const h = slugHyphen(title);
   const studios = detectStudios(q);
   const urls = [];
+  const knownPerformers = {
+    "family vacation": ["rhaya_shyne"],
+  };
+  const performerSlugs = knownPerformers[u] || [];
+  performerSlugs.forEach((slug) => {
+    if (studios.includes("fs") || !studios.length) {
+      urls.push({url: `https://images.psmcdn.net/teamskeet/fs/${slug}/shared/hi.jpg`, score: 32, via: "Family Strokes official performer CDN"});
+      urls.push({url: `https://images.psmcdn.net/teamskeet/fs/${slug}/shared/med.jpg`, score: 30, via: "Family Strokes official performer CDN"});
+    }
+  });
   if (!studios.length || studios.some(s => ["bratty","mts","nubiles"].includes(s))) {
     [u, h.replace(/-/g,"_"), h].forEach(s => {
       urls.push({url: `https://images.nubiles-porn.com/videos/${s}/samples/cover1280.jpg`, score: 24, via: "nubiles CDN"});
