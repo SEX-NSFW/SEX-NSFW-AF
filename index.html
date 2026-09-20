@@ -10,28 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0b0c10;
-      --surface: #12141a;
-      --surface2: #1a1d26;
-      --border: #2a2e3a;
-      --text: #e8eaed;
-      --muted: #9aa0a6;
-      --accent: #c9a227;
-      --accent-dim: #8a6f1a;
-      --success: #3dd68c;
-      --danger: #f07178;
-      --radius: 14px;
+      --bg: #0b0c10; --surface: #12141a; --surface2: #1a1d26; --border: #2a2e3a;
+      --text: #e8eaed; --muted: #9aa0a6; --accent: #c9a227; --accent-dim: #8a6f1a;
+      --success: #3dd68c; --danger: #f07178; --radius: 14px;
       --font-ar: "IBM Plex Sans Arabic", system-ui, sans-serif;
       --font-en: "Inter", system-ui, sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 16px; }
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-en);
-      min-height: 100dvh;
-      line-height: 1.5;
+      background: var(--bg); color: var(--text); font-family: var(--font-en);
+      min-height: 100dvh; line-height: 1.5;
       background-image:
         radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201,162,39,0.08), transparent),
         radial-gradient(ellipse 60% 40% at 100% 100%, rgba(60,40,10,0.15), transparent);
@@ -42,101 +31,64 @@
     .logo {
       font-size: 2.4rem; font-weight: 700; letter-spacing: -0.02em;
       background: linear-gradient(135deg, #e8d48b, #c9a227 60%, #8a6f1a);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .tagline { color: var(--muted); font-size: 0.95rem; margin-top: 0.35rem; }
-    .lang-bar {
-      display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center;
-      margin: 1.25rem 0 0.5rem;
-    }
+    .lang-bar { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; margin: 1.25rem 0 0.5rem; }
     .lang-btn {
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--muted); padding: 0.3rem 0.65rem; border-radius: 999px;
-      font-size: 0.75rem; cursor: pointer; transition: all 0.15s;
+      background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+      padding: 0.3rem 0.65rem; border-radius: 999px; font-size: 0.75rem; cursor: pointer;
     }
-    .lang-btn:hover, .lang-btn.active {
-      background: var(--accent-dim); border-color: var(--accent); color: #fff;
-    }
+    .lang-btn:hover, .lang-btn.active { background: var(--accent-dim); border-color: var(--accent); color: #fff; }
     .search-box {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.25rem; margin-top: 1rem;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.25rem; margin-top: 1rem; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
     }
-    .input-wrap { position: relative; }
     input[type="search"] {
-      width: 100%; background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text); padding: 0.95rem 1rem; border-radius: 10px;
-      font-size: 1.05rem; outline: none; transition: border 0.15s;
-      font-family: inherit;
+      width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+      padding: 0.95rem 1rem; border-radius: 10px; font-size: 1.05rem; outline: none; font-family: inherit;
     }
     body.rtl input[type="search"] { text-align: right; }
     input[type="search"]:focus { border-color: var(--accent); }
-    input[type="search"]::placeholder { color: var(--muted); opacity: 0.7; }
-    .examples {
-      display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.85rem;
-    }
+    .examples { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.85rem; }
     .chip {
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--muted); padding: 0.35rem 0.7rem; border-radius: 999px;
-      font-size: 0.78rem; cursor: pointer; transition: all 0.15s;
+      background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+      padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.78rem; cursor: pointer;
     }
     .chip:hover { border-color: var(--accent); color: var(--accent); }
     .btn-row { display: flex; gap: 0.6rem; margin-top: 1rem; }
     .btn {
       flex: 1; padding: 0.85rem 1.2rem; border: none; border-radius: 10px;
-      font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.15s;
-      font-family: inherit;
+      font-weight: 600; font-size: 1rem; cursor: pointer; font-family: inherit;
     }
-    .btn-primary {
-      background: linear-gradient(135deg, #d4af37, #a67c00);
-      color: #111;
-    }
-    .btn-primary:hover { filter: brightness(1.08); }
+    .btn-primary { background: linear-gradient(135deg, #d4af37, #a67c00); color: #111; }
     .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-ghost {
-      background: transparent; border: 1px solid var(--border); color: var(--muted);
-    }
-    /* Loading */
-    .stages {
-      margin-top: 1.25rem; display: none; flex-direction: column; gap: 0.5rem;
-    }
+    .stages { margin-top: 1.25rem; display: none; flex-direction: column; gap: 0.5rem; }
     .stages.show { display: flex; }
     .stage {
-      display: flex; align-items: center; gap: 0.7rem;
-      padding: 0.55rem 0.8rem; background: var(--surface2);
-      border-radius: 8px; border: 1px solid var(--border); font-size: 0.9rem;
-      color: var(--muted); opacity: 0.45; transition: all 0.25s;
+      display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0.8rem;
+      background: var(--surface2); border-radius: 8px; border: 1px solid var(--border);
+      font-size: 0.9rem; color: var(--muted); opacity: 0.45;
     }
     .stage.active { opacity: 1; border-color: var(--accent); color: var(--text); }
     .stage.done { opacity: 0.75; }
-    .stage .dot {
-      width: 8px; height: 8px; border-radius: 50%; background: var(--border);
-      flex-shrink: 0;
-    }
-    .stage.active .dot { background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse 1s infinite; }
+    .stage .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+    .stage.active .dot { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
     .stage.done .dot { background: var(--success); }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    /* Result */
     .result { display: none; margin-top: 1.5rem; }
-    .result.show { display: block; animation: fadeIn 0.35s ease; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+    .result.show { display: block; }
     .cover-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.4);
     }
     .cover-img-wrap {
       position: relative; background: #000; aspect-ratio: 16/9;
       display: flex; align-items: center; justify-content: center;
     }
-    .cover-img-wrap img {
-      max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in;
-    }
+    .cover-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in; }
     .confidence {
-      position: absolute; top: 0.75rem; inset-inline-end: 0.75rem;
-      padding: 0.25rem 0.65rem; border-radius: 999px; font-size: 0.72rem;
-      font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+      position: absolute; top: 0.75rem; inset-inline-end: 0.75rem; padding: 0.25rem 0.65rem;
+      border-radius: 999px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
     }
     .conf-high { background: rgba(61,214,140,0.2); color: var(--success); border: 1px solid var(--success); }
     .conf-medium { background: rgba(201,162,39,0.2); color: var(--accent); border: 1px solid var(--accent); }
@@ -146,74 +98,54 @@
       border-top: 1px solid var(--border); flex-wrap: wrap;
     }
     .url-field {
-      flex: 1; min-width: 0; background: var(--bg); border: 1px solid var(--border);
-      color: var(--muted); padding: 0.55rem 0.75rem; border-radius: 8px;
-      font-size: 0.8rem; font-family: ui-monospace, monospace; overflow: hidden; text-overflow: ellipsis;
+      flex: 1; min-width: 0; background: var(--bg); border: 1px solid var(--border); color: var(--muted);
+      padding: 0.55rem 0.75rem; border-radius: 8px; font-size: 0.8rem; font-family: ui-monospace, monospace;
+      overflow: hidden; text-overflow: ellipsis;
     }
     .btn-sm {
-      padding: 0.55rem 0.9rem; border-radius: 8px; border: none;
-      font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap;
-      font-family: inherit;
+      padding: 0.55rem 0.9rem; border-radius: 8px; border: none; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; white-space: nowrap; font-family: inherit;
     }
     .btn-copy { background: var(--accent); color: #111; }
     .btn-dl { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
-    .report {
-      padding: 1.1rem 1.15rem; border-top: 1px solid var(--border);
-    }
-    .report h3 {
-      font-size: 0.85rem; color: var(--accent); margin-bottom: 0.75rem;
-      font-weight: 600; letter-spacing: 0.02em;
-    }
-    .report-row {
-      display: grid; grid-template-columns: 120px 1fr; gap: 0.4rem 0.75rem;
-      margin-bottom: 0.55rem; font-size: 0.9rem;
-    }
+    .report { padding: 1.1rem 1.15rem; border-top: 1px solid var(--border); }
+    .report h3 { font-size: 0.85rem; color: var(--accent); margin-bottom: 0.75rem; font-weight: 600; }
+    .report-row { display: grid; grid-template-columns: 120px 1fr; gap: 0.4rem 0.75rem; margin-bottom: 0.55rem; font-size: 0.9rem; }
     .report-label { color: var(--muted); }
     .report-value { color: var(--text); word-break: break-word; }
     .summary-box {
-      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-      padding: 0.75rem; margin-top: 0.5rem; font-size: 0.88rem;
-      direction: ltr; text-align: left; color: var(--muted); line-height: 1.55;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem;
+      margin-top: 0.5rem; font-size: 0.88rem; direction: ltr; text-align: left; color: var(--muted);
     }
     .error-box, .empty-box {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.5rem; text-align: center;
-      margin-top: 1.25rem; display: none;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; text-align: center; margin-top: 1.25rem; display: none;
     }
     .error-box.show, .empty-box.show { display: block; }
     .error-box { border-color: var(--danger); }
     .sources-list { text-align: start; margin-top: 0.75rem; font-size: 0.82rem; color: var(--muted); }
     .sources-list li { margin: 0.25rem 0; word-break: break-all; }
-    .history {
-      margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);
-    }
+    .history { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
     .history h4 { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; }
     .hist-item {
-      display: block; padding: 0.45rem 0.7rem; background: var(--surface2);
-      border-radius: 8px; margin-bottom: 0.35rem; font-size: 0.85rem;
-      color: var(--muted); cursor: pointer; border: 1px solid transparent;
+      display: block; padding: 0.45rem 0.7rem; background: var(--surface2); border-radius: 8px;
+      margin-bottom: 0.35rem; font-size: 0.85rem; color: var(--muted); cursor: pointer; border: 1px solid transparent;
     }
     .hist-item:hover { border-color: var(--border); color: var(--text); }
-    footer {
-      text-align: center; margin-top: 2.5rem; color: var(--muted);
-      font-size: 0.75rem; opacity: 0.7;
-    }
+    footer { text-align: center; margin-top: 2.5rem; color: var(--muted); font-size: 0.75rem; opacity: 0.7; }
     @media (max-width: 420px) {
-      .report-row { grid-template-columns: 1fr; gap: 0.15rem; }
+      .report-row { grid-template-columns: 1fr; }
       .logo { font-size: 2rem; }
     }
   </style>
 </head>
 <body class="rtl">
-
   <div class="container">
     <header>
       <div class="logo">أصل</div>
       <div class="tagline" data-i18n="tagline">من الاسم إلى الغلاف الرسمي</div>
     </header>
-
     <div class="lang-bar" id="lang-bar"></div>
-
     <div class="search-box">
       <div class="input-wrap">
         <input type="search" id="q" data-i18n-placeholder="placeholder"
@@ -225,13 +157,12 @@
         <button class="btn btn-primary" id="search-btn" data-i18n="search">بحث</button>
       </div>
       <div class="stages" id="stages">
-        <div class="stage" data-stage="1"><span class="dot"></span><span data-i18n="stage1">قراءة الاستعلام / صفحة القراصنة</span></div>
-        <div class="stage" data-stage="2"><span class="dot"></span><span data-i18n="stage2">مطابقة الاستوديو والطاقم على IAFD</span></div>
-        <div class="stage" data-stage="3"><span class="dot"></span><span data-i18n="stage3">جلب الملخص الرسمي</span></div>
-        <div class="stage" data-stage="4"><span class="dot"></span><span data-i18n="stage4">جلب الغلاف الترويجي (وليس لقطات داخلية)</span></div>
+        <div class="stage" data-stage="1"><span class="dot"></span><span data-i18n="stage1">قراءة الاستعلام</span></div>
+        <div class="stage" data-stage="2"><span class="dot"></span><span data-i18n="stage2">اكتشاف الاستوديو</span></div>
+        <div class="stage" data-stage="3"><span class="dot"></span><span data-i18n="stage3">بناء روابط الغلاف</span></div>
+        <div class="stage" data-stage="4"><span class="dot"></span><span data-i18n="stage4">التحقق من الغلاف الترويجي</span></div>
       </div>
     </div>
-
     <div class="result" id="result">
       <div class="cover-card">
         <div class="cover-img-wrap">
@@ -246,24 +177,17 @@
         <div class="report" id="report"></div>
       </div>
     </div>
-
-    <div class="error-box" id="error-box">
-      <p id="error-msg"></p>
-      <ul class="sources-list" id="sources-tried"></ul>
-    </div>
+    <div class="error-box" id="error-box"><p id="error-msg"></p><ul class="sources-list" id="sources-tried"></ul></div>
     <div class="empty-box" id="empty-box">
       <p data-i18n="noCover">لم يتم العثور على غلاف ترويجي رسمي. لم يتم عرض أي لقطة داخلية.</p>
       <ul class="sources-list" id="empty-sources"></ul>
     </div>
-
     <div class="history" id="history-wrap" style="display:none">
       <h4 data-i18n="history">عمليات البحث الأخيرة</h4>
       <div id="history-list"></div>
     </div>
-
     <footer data-i18n="footer">أصل · أغلفة ترويجية رسمية فقط · 18+</footer>
   </div>
-
   <script src="app.js"></script>
 </body>
 </html>
