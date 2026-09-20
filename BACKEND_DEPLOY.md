@@ -4,6 +4,7 @@
 
 - `GET /api/search?q=...` للبحث في الصفحات الرسمية وبيانات `og:image`.
 - `GET /api/image?url=...` لجلب صورة متحقق منها عبر الخادم مع Cache لمدة يوم.
+- `GET /health` لفحص جاهزية الخدمة من Render.
 
 الخادم لا يقبل Proxy إلا للنطاقات الموجودة في القائمة المسموحة، ويحد حجم الصورة إلى 8 MB ويتحقق من نوعها وبايتاتها قبل إعادتها.
 
@@ -17,14 +18,14 @@ https://YOUR-BACKEND.example.com
 
 ## ربط GitHub Pages
 
-بعد الحصول على رابط الخادم، أضف هذا السطر قبل تحميل `app.js` في `index.html`:
+رابط الخدمة المستخدم حاليًا هو `https://asl-image-search-api.onrender.com`. أضف هذا السطر قبل تحميل `app.js` في `index.html`:
 
 ```html
-<script>window.ASL_API_BASE = "https://YOUR-BACKEND.example.com";</script>
+<script>window.ASL_API_BASE = "https://asl-image-search-api.onrender.com";</script>
 <script src="app.js"></script>
 ```
 
-أو استبدل سطر تحميل `app.js` الحالي بهذين السطرين. عندها ستستخدم الواجهة الخادم لفحص الصور وعرضها بدل الاعتماد على تحميل CDN مباشرة من المتصفح.
+أو استبدل سطر تحميل `app.js` الحالي بهذين السطرين. عندها تستخدم الواجهة `/api/search` و`/api/image` من الخادم بدل الاعتماد على تحميل CDN مباشرة من المتصفح.
 
 ## اختبار محلي
 

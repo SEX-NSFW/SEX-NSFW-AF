@@ -3,6 +3,9 @@ services:
     name: asl-image-search-api
     runtime: docker
     plan: free
-    healthCheckPath: /
+    healthCheckPath: /health
     dockerfilePath: ./Dockerfile
     autoDeploy: true
+    envVars:
+      - key: FRONTEND_ORIGIN
+        value: https://sex-nsfw.github.io

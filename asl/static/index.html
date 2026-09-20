@@ -61,7 +61,7 @@
       flex: 1; padding: 0.85rem 1.2rem; border: none; border-radius: 10px;
       font-weight: 600; font-size: 1rem; cursor: pointer; font-family: inherit;
     }
-    .btn-primary { background: linear-gradient(135deg, #d4af37, #a67c00); color: #111; }
+    .btn-primary { background: linear-gradient(135deg, #19d3c5, #087f8c); color: #061316; box-shadow: 0 0 0 2px rgba(25,211,197,0.18), 0 6px 18px rgba(25,211,197,0.18); }
     .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
     .stages { margin-top: 1.25rem; display: none; flex-direction: column; gap: 0.5rem; }
     .stages.show { display: flex; }
@@ -154,7 +154,7 @@
       </div>
       <div class="examples" id="examples"></div>
       <div class="btn-row">
-        <button class="btn btn-primary" id="search-btn" data-i18n="search">بحث</button>
+        <button class="btn btn-primary" id="search-btn" data-i18n="search" data-release="backend-v2">بحث · Backend v2</button>
       </div>
       <div class="stages" id="stages">
         <div class="stage" data-stage="1"><span class="dot"></span><span data-i18n="stage1">قراءة الاستعلام</span></div>
@@ -188,6 +188,7 @@
     </div>
     <footer data-i18n="footer">أصل · أغلفة ترويجية رسمية فقط · 18+</footer>
   </div>
-  <script src="app.js?v=route-fix-2"></script>
+  <script>window.ASL_API_BASE = "https://asl-image-search-api.onrender.com";</script>
+  <script src="app.js?v=backend-v2"></script>
 </body>
 </html>

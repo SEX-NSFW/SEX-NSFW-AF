@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """أصل (Asl) — General official-cover finder (local server only)"""
-import json, os, re, ssl
+import json, os, re, ssl, time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs, unquote
 from urllib.request import Request, urlopen
+from pathlib import Path
 
 try:
     import requests
@@ -15,11 +16,28 @@ except ImportError:
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 TIMEOUT = 10
+BASE_DIR = Path(__file__).resolve().parent
 ALLOWED_ORIGINS = {
     "https://sex-nsfw.github.io",
     "http://localhost:8765",
     "http://127.0.0.1:8765",
 }
+if os.environ.get("FRONTEND_ORIGIN"):
+    ALLOWED_ORIGINS.add(os.environ["FRONTEND_ORIGIN"].rstrip("/"))
+
+RATE_LIMIT_WINDOW = 60
+RATE_LIMIT_MAX = 30
+RATE_LIMITS = {}
+
+def rate_limited(client_ip):
+    now = time.time()
+    bucket = [stamp for stamp in RATE_LIMITS.get(client_ip, []) if now - stamp < RATE_LIMIT_WINDOW]
+    if len(bucket) >= RATE_LIMIT_MAX:
+        RATE_LIMITS[client_ip] = bucket
+        return True
+    bucket.append(now)
+    RATE_LIMITS[client_ip] = bucket
+    return False
 
 def normalize_query(q):
     return re.sub(r"\s+", " ", unquote(q).strip())
@@ -291,12 +309,21 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def send_rate_limit(self):
+        self.send_json({"error": "rate limit exceeded", "retryAfter": RATE_LIMIT_WINDOW}, 429)
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_cors()
         self.end_headers()
     def do_GET(self):
+        path = urlparse(self.path).path
+        if path == "/health":
+            self.send_json({"status": "ok", "service": "asl-image-search-api"})
+            return
         if self.path.startswith("/api/search"):
+            if rate_limited(self.client_address[0]):
+                self.send_rate_limit(); return
             qs = parse_qs(urlparse(self.path).query)
             q = qs.get("q", [""])[0]
             if not q: self.send_json({"error": "missing q"}, 400); return
@@ -306,6 +333,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json({"error": str(e), "confidence": "low"}, 500)
             return
         if self.path.startswith("/api/image"):
+            if rate_limited(self.client_address[0]):
+                self.send_rate_limit(); return
             qs = parse_qs(urlparse(self.path).query)
             target = qs.get("url", [""])[0]
             if not target:
@@ -323,10 +352,12 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
             return
-        path = self.path.split("?")[0]
+        path = unquote(path)
         if path in ("/", "/index.html"): path = "/index.html"
-        file_path = "static" + path
+        file_path = (BASE_DIR / "static" / path.lstrip("/")).resolve()
         try:
+            if BASE_DIR not in file_path.parents:
+                raise FileNotFoundError
             with open(file_path, "rb") as f: data = f.read()
             ctype = "text/html; charset=utf-8"
             if path.endswith(".js"): ctype = "application/javascript"
@@ -340,6 +371,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(404); self.end_headers(); self.wfile.write(b"Not found")
     def do_POST(self):
         if self.path == "/api/search":
+            if rate_limited(self.client_address[0]):
+                self.send_rate_limit(); return
             length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(length)
             try: q = json.loads(body.decode("utf-8")).get("q", "")
