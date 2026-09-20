@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: asl-image-search-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true

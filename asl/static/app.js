@@ -1,3 +1,8 @@
+const ASL_API_BASE = window.ASL_API_BASE || (location.hostname.endsWith("github.io") ? "" : location.origin);
+function imageThroughServer(url) {
+  return ASL_API_BASE ? `${ASL_API_BASE}/api/image?url=${encodeURIComponent(url)}` : url;
+}
+
 const I18N = {
   ar: {
     tagline: "من الاسم إلى الغلاف الرسمي",
@@ -382,7 +387,7 @@ async function doSearch() {
     for (let i = 0; i < urls.length && !best; i += batchSize) {
       const batch = urls.slice(i, i + batchSize);
       const results = await Promise.all(batch.map(async (c) => {
-        const ok = await testImage(c.url, 3500);
+        const ok = await testImage(imageThroughServer(c.url), 12000);
         tried.push({ url: c.url, score: c.score, via: c.via, ok: !!ok });
         return ok ? c : null;
       }));
@@ -412,14 +417,15 @@ async function doSearch() {
       series: studios.length ? (studioNames[studios[0]] || studios[0]) : null,
       performers: [], categories: [], officialSummary: null, duration: null, releaseDate: null, officialUrl: null,
       confidence: bestScore >= 20 ? "high" : "medium",
-      notes: "غلاف عبر أنماط CDN (وضع GitHub Pages — بدون سيرفر).",
+      notes: ASL_API_BASE ? "تم جلب الغلاف والتحقق منه عبر خادم الموقع." : "غلاف عبر أنماط CDN (وضع GitHub Pages — بدون سيرفر).",
       coverUrl: best.url, coverScore: bestScore,
     };
     const img = document.getElementById("cover-img");
-    img.src = data.coverUrl;
-    img.onclick = () => window.open(data.coverUrl, "_blank");
+    const renderedCoverUrl = imageThroughServer(data.coverUrl);
+    img.src = renderedCoverUrl;
+    img.onclick = () => window.open(renderedCoverUrl, "_blank");
     document.getElementById("cover-url").value = data.coverUrl;
-    document.getElementById("dl-btn").href = data.coverUrl;
+    document.getElementById("dl-btn").href = renderedCoverUrl;
     const badge = document.getElementById("conf-badge");
     badge.textContent = t(data.confidence);
     badge.className = "confidence conf-" + data.confidence;

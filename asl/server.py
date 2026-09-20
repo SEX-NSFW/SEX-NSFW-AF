@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """أصل (Asl) — General official-cover finder (local server only)"""
-import json, re, ssl
+import json, os, re, ssl
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs, unquote
@@ -80,6 +80,41 @@ def is_image_bytes(url):
                 return chunk.startswith(b"\xff\xd8") or chunk.startswith(b"\x89PNG") or b"WEBP" in chunk[:16] or chunk.startswith(b"GIF")
         except Exception:
             return False
+
+IMAGE_HOSTS = {
+    "iili.io", "images.psmcdn.net", "images.nubiles-porn.com",
+    "brattyfamily.com", "www.brattyfamily.com", "familystrokes.com",
+    "www.familystrokes.com", "momsteachsex.com", "www.momsteachsex.com",
+    "teamskeet.com", "www.teamskeet.com", "sislovesme.com",
+    "www.sislovesme.com", "dadcrush.com", "www.dadcrush.com",
+    "pervmom.com", "www.pervmom.com", "momishorny.com", "www.momishorny.com",
+    "nubilefilms.com", "www.nubilefilms.com", "nubiles-porn.com",
+}
+MAX_IMAGE_BYTES = 8 * 1024 * 1024
+
+def fetch_image(url):
+    """Fetch an allow-listed remote image so the browser does not need hotlink access."""
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or (parsed.hostname or "").lower() not in IMAGE_HOSTS:
+        return None, "image host is not allow-listed"
+    try:
+        req = Request(url, headers={"User-Agent": UA, "Accept": "image/avif,image/webp,image/jpeg,image/png,image/*;q=0.8"})
+        ctx = ssl.create_default_context()
+        with urlopen(req, timeout=12, context=ctx) as resp:
+            content_type = (resp.headers.get("Content-Type") or "").split(";", 1)[0].lower()
+            if not content_type.startswith("image/"):
+                return None, "remote response is not an image"
+            length = int(resp.headers.get("Content-Length") or 0)
+            if length > MAX_IMAGE_BYTES:
+                return None, "image is too large"
+            body = resp.read(MAX_IMAGE_BYTES + 1)
+            if len(body) > MAX_IMAGE_BYTES:
+                return None, "image is too large"
+            if not (body.startswith(b"\xff\xd8") or body.startswith(b"\x89PNG") or b"WEBP" in body[:32] or body.startswith(b"GIF")):
+                return None, "image bytes could not be verified"
+            return (body, content_type), None
+    except Exception as exc:
+        return None, str(exc)
 
 def fetch_page(url):
     try:
@@ -261,6 +296,23 @@ class Handler(BaseHTTPRequestHandler):
                 import traceback; traceback.print_exc()
                 self.send_json({"error": str(e), "confidence": "low"}, 500)
             return
+        if self.path.startswith("/api/image"):
+            qs = parse_qs(urlparse(self.path).query)
+            target = qs.get("url", [""])[0]
+            if not target:
+                self.send_json({"error": "missing url"}, 400); return
+            result, error = fetch_image(target)
+            if error:
+                self.send_json({"error": error}, 502); return
+            body, content_type = result
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Cache-Control", "public, max-age=86400")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
         path = self.path.split("?")[0]
         if path in ("/", "/index.html"): path = "/index.html"
         file_path = "static" + path
@@ -289,7 +341,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(404); self.end_headers()
 
 if __name__ == "__main__":
-    port = 8765
+    port = int(os.environ.get("PORT", "8765"))
     print(f"أصل (Asl) general engine on http://0.0.0.0:{port}")
 
 HTTPServer(("0.0.0.0", port), Handler).serve_forever()
