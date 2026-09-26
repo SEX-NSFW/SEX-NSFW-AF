@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="rating" content="adult" />
+    <title>SceneCover</title>
+    <meta name="description" content="From title to official cover" />
+    <meta name="theme-color" content="#0c0b0a" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="wrap">
+      <header class="header">
+        <div>
+          <p class="kicker">SceneCover</p>
+          <h1 class="tagline" id="tagline">من العنوان إلى الغلاف الرسمي</h1>
+        </div>
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" id="btn-ar" aria-pressed="true">ع</button>
+          <button type="button" id="btn-en" aria-pressed="false">EN</button>
+        </div>
+      </header>
+
+      <form class="panel" id="search-form">
+        <label class="sr-only" for="scene-query" id="query-label">اكتب عنوان المشهد</label>
+        <div class="row">
+          <input
+            id="scene-query"
+            type="search"
+            name="q"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="اكتب عنوان المشهد"
+          />
+          <button type="submit" class="btn btn-lg" id="search-btn">
+            <span id="search-icon"></span>
+            <span id="search-label">بحث</span>
+          </button>
+        </div>
+        <div style="margin-top: 0.75rem">
+          <button type="button" class="btn btn-outline" id="demo-btn">
+            <span id="demo-icon"></span>
+            <span id="demo-label">تجربة: Family Vacation!!! Family Strokes</span>
+          </button>
+        </div>
+      </form>
+      <p class="hint" id="hint">العناوين وأسماء المؤدين تُعرض كما هي بالحروف اللاتينية.</p>
+      <main class="main" id="main"></main>
+    </div>
+    <script src="js/app.js" defer></script>
+  </body>
+</html>
