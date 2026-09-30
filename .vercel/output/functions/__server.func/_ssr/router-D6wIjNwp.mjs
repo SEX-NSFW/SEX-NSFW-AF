@@ -1,9 +1,12 @@
-import { useEffect } from "react";
-import { HeadContent, Outlet, Scripts, createFileRoute, createRootRoute, createRouter, lazyRouteComponent, useRouter } from "@tanstack/react-router";
-import { Fragment, jsx, jsxs } from "react/jsx-runtime";
-import { TriangleAlert } from "lucide-react";
-import { z } from "zod";
-//#region src/lib/error-component.tsx
+import { i as __toESM, n as __exportAll } from "../_runtime.mjs";
+import { n as require_react } from "../_libs/@radix-ui/react-compose-refs+[...].mjs";
+import { _ as useRouter, f as createRouter, g as createRootRoute, h as createFileRoute, l as Scripts, m as lazyRouteComponent, p as Outlet, u as HeadContent, v as require_jsx_runtime } from "../_libs/@tanstack/react-router+[...].mjs";
+import { t as TriangleAlert } from "../_libs/lucide-react.mjs";
+import { a as union, i as string, n as number, r as object, t as literal } from "../_libs/zod.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/router-D6wIjNwp.js
+var router_D6wIjNwp_exports = /* @__PURE__ */ __exportAll({ getRouter: () => getRouter });
+var import_react = /* @__PURE__ */ __toESM(require_react());
+var import_jsx_runtime = require_jsx_runtime();
 var FALLBACK_MESSAGE = "An unexpected error occurred. Try reloading the page.";
 function errorMessage(error) {
 	if (error instanceof Error && error.message) return error.message;
@@ -11,30 +14,28 @@ function errorMessage(error) {
 	return FALLBACK_MESSAGE;
 }
 function AppErrorComponent({ error }) {
-	return /* @__PURE__ */ jsxs("main", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
 		className: "flex min-h-screen flex-col items-center justify-center gap-3 px-6 text-center bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50",
 		children: [
-			/* @__PURE__ */ jsx("span", {
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 				className: "text-red-500",
 				"aria-hidden": "true",
-				children: /* @__PURE__ */ jsx(TriangleAlert, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TriangleAlert, {
 					className: "size-10",
 					strokeWidth: 2
 				})
 			}),
-			/* @__PURE__ */ jsx("h1", {
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
 				className: "text-lg font-semibold",
 				children: "Something went wrong"
 			}),
-			/* @__PURE__ */ jsx("p", {
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 				className: "max-w-md text-sm break-words text-zinc-500 dark:text-zinc-400",
 				children: errorMessage(error)
 			})
 		]
 	});
 }
-//#endregion
-//#region src/lib/auth/provider.tsx
 /**
 * App-wide client provider mounted once near the root (in `src/routes/__root.tsx`):
 *
@@ -46,13 +47,9 @@ function AppErrorComponent({ error }) {
 * (e.g. a toast or theme provider) without churning the root shell.
 */
 function AuthProvider({ children }) {
-	return /* @__PURE__ */ jsx(Fragment, { children });
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, { children });
 }
-//#endregion
-//#region src/lib/app-data/types.ts
 var CONNECTOR_TOKEN_READY_EVENT = "grok:connector-token-ready";
-//#endregion
-//#region src/lib/preview-embedder-origin.ts
 function isGrokEmbedderOrigin(origin) {
 	try {
 		const url = new URL(origin);
@@ -89,8 +86,6 @@ function resolveParentEmbedderOrigin(parentIsSelf, referrer, ancestorOrigin, gue
 	} catch {}
 	return null;
 }
-//#endregion
-//#region src/lib/preview-host-bridge.ts
 /**
 * Guest side of the grok-web ↔ sandbox preview postMessage bridge.
 *
@@ -98,21 +93,21 @@ function resolveParentEmbedderOrigin(parentIsSelf, referrer, ancestorOrigin, gue
 * Top-level runs (download/export, local `npm run dev`, deployed sites) noop.
 */
 var PREVIEW_BRIDGE_CHANNEL = "grok-preview-bridge";
-var EnvelopeSchema = z.object({
-	channel: z.literal(PREVIEW_BRIDGE_CHANNEL),
-	version: z.number().int().positive(),
-	type: z.string().min(1)
+var EnvelopeSchema = object({
+	channel: literal(PREVIEW_BRIDGE_CHANNEL),
+	version: number().int().positive(),
+	type: string().min(1)
 });
-var HelloSchema = EnvelopeSchema.extend({ type: z.literal("hello") });
+var HelloSchema = EnvelopeSchema.extend({ type: literal("hello") });
 var NavigateSchema = EnvelopeSchema.extend({
-	type: z.literal("navigate"),
-	path: z.string().min(1)
+	type: literal("navigate"),
+	path: string().min(1)
 });
 var HistorySchema = EnvelopeSchema.extend({
-	type: z.literal("history"),
-	delta: z.union([z.literal(-1), z.literal(1)])
+	type: literal("history"),
+	delta: union([literal(-1), literal(1)])
 });
-var ConnectorTokenReadySchema = EnvelopeSchema.extend({ type: z.literal("connector-token-ready") });
+var ConnectorTokenReadySchema = EnvelopeSchema.extend({ type: literal("connector-token-ready") });
 function isSafeBridgePath(path) {
 	if (!path.startsWith("/") || path.startsWith("//") || path.includes("\\")) return false;
 	try {
@@ -287,15 +282,13 @@ function collectRoutePathsFromTree(routeTree) {
 	walk(routeTree);
 	return [...paths];
 }
-//#endregion
-//#region src/components/preview-host-bridge.tsx
 /**
 * Mount once in `__root.tsx` so the Grok preview chrome can drive navigation
 * (and later receive registered routes). Noops when the app is not embedded.
 */
 function PreviewHostBridge() {
 	const router = useRouter();
-	useEffect(() => {
+	(0, import_react.useEffect)(() => {
 		return installPreviewHostBridge({
 			navigate: (path) => {
 				router.history.push(path);
@@ -305,11 +298,7 @@ function PreviewHostBridge() {
 	}, [router]);
 	return null;
 }
-//#endregion
-//#region src/styles.css?url
-var styles_default = "/assets/styles-B9OtELPm.css";
-//#endregion
-//#region src/routes/__root.tsx
+var styles_default = "/assets/styles-BHpWxB7D.css";
 var APP_NAME = "SceneCover";
 var Route$3 = createRootRoute({
 	head: () => ({
@@ -366,23 +355,21 @@ var Route$3 = createRootRoute({
 			}
 		]
 	}),
-	component: () => /* @__PURE__ */ jsxs("html", {
+	component: () => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("html", {
 		lang: "ar",
 		dir: "rtl",
 		suppressHydrationWarning: true,
-		children: [/* @__PURE__ */ jsx("head", { children: /* @__PURE__ */ jsx(HeadContent, {}) }), /* @__PURE__ */ jsxs("body", {
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("head", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HeadContent, {}) }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("body", {
 			className: "bg-bg text-fg antialiased",
 			children: [
-				/* @__PURE__ */ jsx(PreviewHostBridge, {}),
-				/* @__PURE__ */ jsx(AuthProvider, { children: /* @__PURE__ */ jsx(Outlet, {}) }),
-				/* @__PURE__ */ jsx(Scripts, {})
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PreviewHostBridge, {}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AuthProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {}) }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Scripts, {})
 			]
 		})]
 	})
 });
-//#endregion
-//#region src/routes/index.tsx
-var $$splitComponentImporter = () => import("./routes-BCg6tMLx.js");
+var $$splitComponentImporter = () => import("./routes-Ccq6RoHh.mjs");
 var Route$2 = createFileRoute("/")({ component: lazyRouteComponent($$splitComponentImporter, "component") });
 var FETCH_HEADERS = {
 	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
@@ -470,8 +457,6 @@ function attr(html, name) {
 	const re2 = new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]*(?:property|name)=["']${name}["']`, "i");
 	return re.exec(html)?.[1] ?? re2.exec(html)?.[1] ?? null;
 }
-//#endregion
-//#region src/lib/cover/match.ts
 var STOP = /* @__PURE__ */ new Set([
 	"a",
 	"an",
@@ -716,8 +701,7 @@ function isStrongMatch(query, title, extra = "") {
 	const overlap = qt.filter((tok) => tt.includes(tok));
 	const union = /* @__PURE__ */ new Set([...qt, ...tt]);
 	const jaccard = union.size ? overlap.length / union.size : 0;
-	const need = qt.length <= 2 ? qt.length : 3;
-	if (qt.length > 0 && overlap.length >= need) {
+	if (overlap.length >= 3) {
 		const extraPenalty = Math.max(0, tt.length - overlap.length) * 1.5;
 		return {
 			ok: true,
@@ -753,8 +737,6 @@ function pickBestMatch(items, query, getTitle, getExtra) {
 	}
 	return best;
 }
-//#endregion
-//#region src/lib/cover/find-cover.server.ts
 var CODE_STUDIO = {
 	fs: "Family Strokes",
 	pvm: "PervMom",
@@ -895,10 +877,7 @@ async function lookupTeamSkeetPage(url, query) {
 		if (!html) return null;
 		const title = (attr(html, "og:title") || decodeHtml((html.match(/<title>([^<]+)<\/title>/i)?.[1] ?? "").split("|")[0] ?? "")).replace(/\s+\|\s+.*$/, "").trim();
 		if (!title) return null;
-		const slugFromUrl = (url.match(/\/movies\/([^/?#]+)/i) || [])[1] || "";
-		const querySlug = slugifyTitle(query)[0] || "";
-		const slugHit = Boolean(slugFromUrl) && Boolean(querySlug) && (slugFromUrl === querySlug || slugFromUrl.includes(querySlug) || querySlug.includes(slugFromUrl));
-		if (!isStrongMatch(query, title).ok && !slugHit) return null;
+		if (!isStrongMatch(query, title).ok) return null;
 		const cover = psmcdnFromPage(html);
 		if (!cover) return null;
 		const hi = await verifyImage(cover);
@@ -1014,12 +993,12 @@ async function findCover(rawQuery) {
 	const query = rawQuery.replace(/\s+/g, " ").trim();
 	if (query.length < 2) return empty("invalid_query");
 	try {
-		const skeet = await searchTeamSkeet(query);
-		if (skeet?.coverUrl) return skeet;
-	} catch {}
-	try {
 		const primary = await searchPorndiff(query);
 		if (primary?.coverUrl) return primary;
+	} catch {}
+	try {
+		const skeet = await searchTeamSkeet(query);
+		if (skeet?.coverUrl) return skeet;
 	} catch {}
 	try {
 		const nude = await searchThenude(query);
@@ -1031,15 +1010,11 @@ async function findCover(rawQuery) {
 	} catch {}
 	return empty("not_found");
 }
-//#endregion
-//#region src/routes/api/cover.ts
 var Route$1 = createFileRoute("/api/cover")({ server: { handlers: {
 	GET: async ({ request }) => {
 		const result = await findCover(new URL(request.url).searchParams.get("q") ?? "");
-		return Response.json(result, {
-			status: 200,
-			headers: { "Cache-Control": "no-store" }
-		});
+		const status = result.coverUrl ? 200 : result.error === "invalid_query" ? 400 : 404;
+		return Response.json(result, { status });
 	},
 	POST: async ({ request }) => {
 		let q = "";
@@ -1050,14 +1025,10 @@ var Route$1 = createFileRoute("/api/cover")({ server: { handlers: {
 			q = "";
 		}
 		const result = await findCover(q);
-		return Response.json(result, {
-			status: 200,
-			headers: { "Cache-Control": "no-store" }
-		});
+		const status = result.coverUrl ? 200 : result.error === "invalid_query" ? 400 : 404;
+		return Response.json(result, { status });
 	}
 } } });
-//#endregion
-//#region src/routes/api/image.ts
 var Route = createFileRoute("/api/image")({ server: { handlers: { GET: async ({ request }) => {
 	const raw = new URL(request.url).searchParams.get("url") ?? "";
 	if (!isAllowedImageUrl(raw)) return new Response("Forbidden", { status: 403 });
@@ -1084,8 +1055,6 @@ var Route = createFileRoute("/api/image")({ server: { handlers: { GET: async ({ 
 		return new Response("Upstream error", { status: 502 });
 	}
 } } } });
-//#endregion
-//#region src/routeTree.gen.ts
 var rootRouteChildren = {
 	IndexRoute: Route$2.update({
 		id: "/",
@@ -1104,8 +1073,6 @@ var rootRouteChildren = {
 	})
 };
 var routeTree = Route$3._addFileChildren(rootRouteChildren)._addFileTypes();
-//#endregion
-//#region src/router.tsx
 function getRouter() {
 	return createRouter({
 		routeTree,
@@ -1113,4 +1080,4 @@ function getRouter() {
 	});
 }
 //#endregion
-export { getRouter };
+export { getRouter, router_D6wIjNwp_exports as t };

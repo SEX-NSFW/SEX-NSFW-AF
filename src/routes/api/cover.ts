@@ -7,11 +7,8 @@ export const Route = createFileRoute("/api/cover")({
       GET: async ({ request }) => {
         const q = new URL(request.url).searchParams.get("q") ?? "";
         const result = await findCover(q);
-        // Always 200 with JSON body so the client can distinguish not_found from a dead deploy.
-        return Response.json(result, {
-          status: 200,
-          headers: { "Cache-Control": "no-store" },
-        });
+        const status = result.coverUrl ? 200 : result.error === "invalid_query" ? 400 : 404;
+        return Response.json(result, { status });
       },
       POST: async ({ request }) => {
         let q = "";
@@ -22,10 +19,8 @@ export const Route = createFileRoute("/api/cover")({
           q = "";
         }
         const result = await findCover(q);
-        return Response.json(result, {
-          status: 200,
-          headers: { "Cache-Control": "no-store" },
-        });
+        const status = result.coverUrl ? 200 : result.error === "invalid_query" ? 400 : 404;
+        return Response.json(result, { status });
       },
     },
   },

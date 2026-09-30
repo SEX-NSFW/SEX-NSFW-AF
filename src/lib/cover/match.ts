@@ -197,10 +197,7 @@ export function isStrongMatch(
   const union = new Set([...qt, ...tt]);
   const jaccard = union.size ? overlap.length / union.size : 0;
 
-  // Short titles (1–2 tokens): require all query tokens to match.
-  // Longer titles: require at least 3 overlapping meaningful tokens.
-  const need = qt.length <= 2 ? qt.length : 3;
-  if (qt.length > 0 && overlap.length >= need) {
+  if (overlap.length >= 3) {
     const extraPenalty = Math.max(0, tt.length - overlap.length) * 1.5;
     return {
       ok: true,
