@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "SceneCover",
+      "hasCanvas": false,
+      "bodyTextLen": 287,
+      "bodyTextHash": "3b96f2f58af2d1b9fa273135a68c3fccf3e9420ee92013ecf2d101577143b14e",
+      "bodyTextPrefix": "SCENECOVER من العنوان إلى الغلاف الرسمي ع EN اكتب عنوان المشهد ب",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "SceneCover",
+      "hasCanvas": false,
+      "bodyTextLen": 287,
+      "bodyTextHash": "3b96f2f58af2d1b9fa273135a68c3fccf3e9420ee92013ecf2d101577143b14e",
+      "bodyTextPrefix": "SCENECOVER من العنوان إلى الغلاف الرسمي ع EN اكتب عنوان المشهد ب",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
