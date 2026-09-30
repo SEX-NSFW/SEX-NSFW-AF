@@ -117,7 +117,8 @@ function isStrongMatch(query, title, extra = "") {
   const overlap = qt.filter((tok) => tt.includes(tok));
   const union = new Set([...qt, ...tt]);
   const jaccard = union.size ? overlap.length / union.size : 0;
-  if (overlap.length >= 3) {
+  const need = qt.length <= 2 ? qt.length : 3;
+  if (qt.length > 0 && overlap.length >= need) {
     return { ok: true, score: 40 + overlap.length * 8 + jaccard * 20 };
   }
   return { ok: false, score: overlap.length };
@@ -284,7 +285,11 @@ async function searchTeamSkeet(query) {
     const html = await fetchHtml(page);
     if (!html) continue;
     const title = (attr(html, "og:title") || decodeHtml((html.match(/<title>([^<]+)/i)?.[1] || "").split("|")[0])).trim();
-    if (!title || !isStrongMatch(query, title).ok) continue;
+    const slugFromUrl = (page.match(/\/movies\/([^/?#]+)/i) || [])[1] || "";
+    const querySlug = (slugs[0] || "");
+    const slugHit = slugFromUrl && querySlug && (slugFromUrl === querySlug || slugFromUrl.includes(querySlug) || querySlug.includes(slugFromUrl));
+    if (!title) continue;
+    if (!isStrongMatch(query, title).ok && !slugHit) continue;
     const og = attr(html, "og:image");
     const direct = html.match(/https:\/\/images\.psmcdn\.net\/(?:cdn-cgi\/image\/[^/]+\/)?teamskeet\/[a-z]+\/[a-z0-9_]+\/shared\/(?:hi|med)\.jpg/i)?.[0];
     const raw = og ? unwrapPsm(og) : direct ? unwrapPsm(direct) : null;
@@ -319,14 +324,15 @@ async function findCover(rawQuery) {
   } catch {
     /* static host — scrape client-side */
   }
+  // Client-side fallback (static hosts / dead API): Hub first, then aggregator
+  try {
+    const skeet = await searchTeamSkeet(query);
+    if (skeet?.coverUrl) return skeet;
+  } catch { /* fall through */ }
   try {
     const primary = await searchPorndiff(query);
     if (primary?.coverUrl) return primary;
     if (primary?.error === "unverified") return primary;
-  } catch { /* fall through */ }
-  try {
-    const skeet = await searchTeamSkeet(query);
-    if (skeet?.coverUrl) return skeet;
   } catch { /* fall through */ }
   return { coverUrl: null, title: null, studio: null, source: null, performers: [], pageUrl: null, error: "not_found" };
 }

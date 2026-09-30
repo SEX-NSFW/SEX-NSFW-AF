@@ -220,8 +220,18 @@ async function lookupTeamSkeetPage(
       decodeHtml((html.match(/<title>([^<]+)<\/title>/i)?.[1] ?? "").split("|")[0] ?? "");
     const title = pageTitle.replace(/\s+\|\s+.*$/, "").trim();
     if (!title) return null;
+    // Accept if title matches OR the URL slug is clearly derived from the query
+    // (direct /movies/{slug} hits should not require 3-token overlap).
+    const slugFromUrl = (url.match(/\/movies\/([^/?#]+)/i) || [])[1] || "";
+    const querySlug = slugifyTitle(query)[0] || "";
+    const slugHit =
+      Boolean(slugFromUrl) &&
+      Boolean(querySlug) &&
+      (slugFromUrl === querySlug ||
+        slugFromUrl.includes(querySlug) ||
+        querySlug.includes(slugFromUrl));
     const match = isStrongMatch(query, title);
-    if (!match.ok) return null;
+    if (!match.ok && !slugHit) return null;
     const cover = psmcdnFromPage(html);
     if (!cover) return null;
     const hi = await verifyImage(cover);
@@ -375,16 +385,17 @@ export async function findCover(rawQuery: string): Promise<CoverResult> {
   const query = rawQuery.replace(/\s+/g, " ").trim();
   if (query.length < 2) return empty("invalid_query");
 
+  // Hub CDN first (reliable official covers for TeamSkeet network titles)
   try {
-    const primary = await searchPorndiff(query);
-    if (primary?.coverUrl) return primary;
+    const skeet = await searchTeamSkeet(query);
+    if (skeet?.coverUrl) return skeet;
   } catch {
     /* fall through */
   }
 
   try {
-    const skeet = await searchTeamSkeet(query);
-    if (skeet?.coverUrl) return skeet;
+    const primary = await searchPorndiff(query);
+    if (primary?.coverUrl) return primary;
   } catch {
     /* fall through */
   }

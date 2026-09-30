@@ -79,6 +79,10 @@ export function SceneCoverApp() {
     setCopied(false);
     try {
       const res = await fetch(`/api/cover?q=${encodeURIComponent(q)}`);
+      const ct = res.headers.get("content-type") || "";
+      if (!ct.includes("application/json")) {
+        throw new Error("api_unavailable");
+      }
       const data = (await res.json()) as CoverResult;
       setResult(data);
     } catch {
